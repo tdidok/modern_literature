@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: books-service
+spec:
+  selector:
+    app: books-service
+  type: NodePort
+  ports:
+    - name: http
+      port: 8082
+      nodePort: 31002
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: books-service
+spec:
+  selector:
+    matchLabels:
+      app: books-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: books-service
+    spec:
+      containers:
+        - name: server
+          image: tdidok/books-service
+          ports:
+            - name: http
+              containerPort: 8082
